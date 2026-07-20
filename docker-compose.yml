@@ -1,0 +1,33 @@
+# Dependencies: install only inside this image — do not use host pip/venv.
+# From this project directory:
+#
+#   docker compose up -d --build
+#
+# One-off command (demo, folder, single file):
+#
+#   docker compose run --rm --entrypoint "" python python main.py --demo
+#   docker compose run --rm --entrypoint "" python python main.py incoming/Example_Invoices --fresh
+#
+# Interactive shell:
+#
+#   docker exec -it ai-invoice-extractor-python-1 bash
+#
+# Ollama on the host: set in .env
+#   OLLAMA_HOST=http://host.docker.internal:11434
+
+name: ai-invoice-extractor
+
+services:
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-invoice-extractor-python-1
+    volumes:
+      - .:/workspace/ai-invoice-extractor
+    working_dir: /workspace/ai-invoice-extractor
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    entrypoint: ["sleep", "infinity"]
